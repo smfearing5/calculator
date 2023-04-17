@@ -1,6 +1,7 @@
 let topDisplay = document.querySelector("#top-display");
 let bottomDisplay = document.querySelector("#bottom-display");
 let clearButton = document.querySelector("#clear-btn");
+let backspace = document.querySelector("#backspace");
 let numButtons = document.querySelectorAll(".num-btn");
 let opButtons = document.querySelectorAll(".op-btn");
 
@@ -18,12 +19,31 @@ function buttonSetup() {
     clearButton.addEventListener("click", () => {
         topDisplay.textContent = "0";
         bottomDisplay.textContent = "";
+        topDisplay.previousElementSibling.textContent = "";
+        bottomDisplay.previousElementSibling.textContent = "";
         currentDisplay = topDisplay;
 
         if (opButtonSelected != null) {
             opButtonSelected.setAttribute("class", "btn op-btn");
             opButtonSelected = null;
         }
+    });
+
+    backspace.addEventListener("click", () => {
+        if (opButtonSelected != null && bottomDisplay.textContent === "") {
+            opButtonSelected.setAttribute("class", "btn op-btn");
+            opButtonSelected = null;
+            currentDisplay = topDisplay;
+        }
+        else {
+            currentDisplay.textContent = currentDisplay.textContent.slice(
+                0, currentDisplay.textContent.length - 1
+            );
+        };
+
+        if (topDisplay.textContent === "") {
+            topDisplay.textContent = 0;
+        };
     });
 
     // num buttons
