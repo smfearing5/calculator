@@ -10,7 +10,49 @@
 </head>
 <body>
     <div id="calculator">
-        <div id="display"></div>
+        <div id="display">
+            <div class="display-row" id="top-display">0</div>
+            <div class="display-row" id="bottom-display"></div>
+        </div>
+        <div id="buttons">
+            <div id="button-stack">
+                <div id="top-buttons">
+                    <div class="btn top-btn" id="clear-btn">C</div>
+                    <div class="btn top-btn"></div>
+                    <div class="btn top-btn">BS</div>
+                </div>
+                <div id="num-buttons">
+                    <div class="num-row">
+                        <div class="btn num-btn">7</div>
+                        <div class="btn num-btn">8</div>
+                        <div class="btn num-btn">9</div>
+                    </div>
+                    <div class="num-row">
+                        <div class="btn num-btn">4</div>
+                        <div class="btn num-btn">5</div>
+                        <div class="btn num-btn">6</div>
+                    </div>
+                    <div class="num-row">
+                        <div class="btn num-btn">1</div>
+                        <div class="btn num-btn">2</div>
+                        <div class="btn num-btn">3</div>
+                    </div>
+                    <div class="num-row">
+                        <div class="btn num-btn">0</div>
+                        <div class="btn num-btn">.</div>
+                        <div class="btn num-btn">+/-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="op-buttons">
+                <div class="btn op-btn">/</div>
+                <div class="btn op-btn">*</div>
+                <div class="btn op-btn">-</div>
+                <div class="btn op-btn">+</div>
+                <div class="btn op-btn">=</div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

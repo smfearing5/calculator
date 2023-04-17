@@ -1,7 +1,39 @@
+let topDisplay = document.querySelector("#top-display");
+let bottomDisplay = document.querySelector("#bottom-display");
+let clearButton = document.querySelector("#clear-btn");
+let numButtons = document.querySelectorAll(".num-btn");
+let opButtons = document.querySelectorAll(".op-btn");
+
+let currentDisplay = topDisplay;
+
 // main
+buttonSetup();
 
 
 // functions
+function buttonSetup() {
+    // top buttons
+    clearButton.addEventListener("click", () => {
+        topDisplay.textContent = "0";
+        bottomDisplay.textContent = "";
+        currentDisplay = topDisplay;
+    });
+
+    // num buttons
+    numButtons.forEach(btn => {
+        if (parseInt(btn.textContent) != NaN) {  // if it is a number...
+            btn.addEventListener("click", () => {
+                if (currentDisplay.textContent === "0") {
+                    currentDisplay.textContent = "";
+                };
+                currentDisplay.textContent += btn.textContent;
+            });
+        };
+    });
+
+    // op buttons
+}
+
 function add(num1, num2) {
     return num1 + num2;
 }

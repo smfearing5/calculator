@@ -2,6 +2,58 @@ body {
     background-color: #111;
 }
 
+#buttons,
+#button-stack,
+#top-buttons,
+.num-row,
+#op-buttons,
+.btn {
+    display: flex;
+}
+
+#button-stack,
+#op-buttons {
+    flex-direction: column;
+}
+
+#display,
+.btn {
+    margin: 2px;
+    border-radius: 8px;
+}
+
 #display {
     background-color: #bbb;
+    width: 348px;
+    font-size: 56px;
+    text-align: end;
+}
+
+.display-row {
+    height: 64px;
+}
+
+#num-buttons {
+    align-self: flex-end;
+}
+
+.btn {
+    height: 64px;
+    width: 84px;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: 900;
+}
+
+.top-btn {
+    background-color: #a3a;
+}
+
+.num-btn {
+    background-color: #3bb;
+}
+
+.op-btn {
+    background-color: #4a2;
 }
