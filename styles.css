@@ -5,6 +5,7 @@ body {
 #buttons,
 #button-stack,
 #top-buttons,
+.display-row,
 .num-row,
 #op-buttons,
 .btn {
@@ -31,6 +32,7 @@ body {
 
 .display-row {
     height: 64px;
+    justify-content: space-between;
 }
 
 #num-buttons {
@@ -56,4 +58,8 @@ body {
 
 .op-btn {
     background-color: #4a2;
+}
+
+.sel-op-btn {
+    background-color: #9e3;
 }

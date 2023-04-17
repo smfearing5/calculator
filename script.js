@@ -5,6 +5,8 @@ let numButtons = document.querySelectorAll(".num-btn");
 let opButtons = document.querySelectorAll(".op-btn");
 
 let currentDisplay = topDisplay;
+let opButtonSelected = null;
+let overwrite = false;
 
 // main
 buttonSetup();
@@ -17,21 +19,94 @@ function buttonSetup() {
         topDisplay.textContent = "0";
         bottomDisplay.textContent = "";
         currentDisplay = topDisplay;
+
+        if (opButtonSelected != null) {
+            opButtonSelected.setAttribute("class", "btn op-btn");
+            opButtonSelected = null;
+        }
     });
 
     // num buttons
     numButtons.forEach(btn => {
-        if (parseInt(btn.textContent) != NaN) {  // if it is a number...
+        if (isNaN(btn.textContent) == false) {  // if it is a number...
             btn.addEventListener("click", () => {
-                if (currentDisplay.textContent === "0") {
+                if (currentDisplay.textContent === "0" || overwrite) {
+                    overwrite = false;
                     currentDisplay.textContent = "";
                 };
                 currentDisplay.textContent += btn.textContent;
             });
+        }
+        else if (btn.textContent == ".") {
+            btn.addEventListener("click", () => {
+                if (!currentDisplay.textContent.includes(".")) {
+                    currentDisplay.textContent += ".";
+                };
+            });
+        }
+        else if (btn.textContent == "+/-") {
+            btn.addEventListener("click", () => {
+                if (currentDisplay.previousElementSibling.textContent == "-") {
+                    currentDisplay.previousElementSibling.textContent = "";
+                }
+                else currentDisplay.previousElementSibling.textContent = "-";
+            });
+
         };
     });
 
     // op buttons
+    opButtons.forEach(btn => {
+        // operations
+        if (btn.textContent != "=") {
+            btn.addEventListener("click", () => operatorButton(btn));
+        }
+        // equals button
+        else btn.addEventListener("click", () => {
+            if (opButtonSelected != null) equalsButton();
+        });
+    });
+}
+
+function operatorButton(btn) {
+    if (opButtonSelected == null) {
+        opButtonSelected = btn;
+        btn.setAttribute("class", "btn sel-op-btn");
+        currentDisplay = bottomDisplay;
+    }
+}
+
+function equalsButton() {
+    // get the right numbers
+    let num1 = parseFloat(topDisplay.textContent);
+    if (topDisplay.previousElementSibling.textContent == "-") {
+        num1 *= -1;
+    };
+
+    let num2 = parseFloat(bottomDisplay.textContent);
+    if (bottomDisplay.previousElementSibling.textContent == "-") {
+        num2 *= -1;
+    };
+
+    // execute operation
+    let output = operate(num1, num2, opButtonSelected.textContent);
+
+    // update display
+    if (output < 0) {  // move the negative sign
+        output *= -1;
+        topDisplay.previousElementSibling.textContent = "-";
+    }
+    else topDisplay.previousElementSibling.textContent = "";
+
+    bottomDisplay.previousElementSibling.textContent = "";
+    topDisplay.textContent = output;
+    bottomDisplay.textContent = "";
+    currentDisplay = topDisplay;
+    overwrite = true;
+
+    // reset operation button
+    opButtonSelected.setAttribute("class", "btn op-btn");
+    opButtonSelected = null;
 }
 
 function add(num1, num2) {
@@ -47,19 +122,20 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-    return num1 / num2;
+    if (num2 == 0) return "BLACK HOLE"
+    else return num1 / num2;
 }
 
 function operate(num1, num2, operator) {
     switch(operator) {
         case "+":
-            break;
+            return add(num1, num2);
         case "-":
-            break;
+            return subtract(num1, num2);
         case "*":
-            break;
+            return multiply(num1, num2);
         case "/":
-            break;
+            return divide(num1, num2);
         default:
             console.log("operate() switch ERROR");
     };
