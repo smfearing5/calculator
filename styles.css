@@ -1,7 +1,8 @@
 body {
-    background-color: #111;
+    background-color: #555;
 }
 
+#calculator,
 #buttons,
 #button-stack,
 #top-buttons,
@@ -12,9 +13,18 @@ body {
     display: flex;
 }
 
+#calculator,
 #button-stack,
 #op-buttons {
     flex-direction: column;
+}
+
+#calculator {
+    background-color: #113;
+    width: fit-content;
+    gap: 12px;
+    border-radius: 24px;
+    padding: 24px;
 }
 
 #display,

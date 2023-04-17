@@ -46,12 +46,25 @@ function buttonSetup() {
         }
         else if (btn.textContent == "+/-") {
             btn.addEventListener("click", () => {
-                if (currentDisplay.previousElementSibling.textContent == "-") {
-                    currentDisplay.previousElementSibling.textContent = "";
+                // if already adding or subtracting, just toggle which
+                if (opButtonSelected != null && opButtonSelected.textContent == "+") {
+                    opButtonSelected.setAttribute("class", "btn op-btn");
+                    opButtonSelected = opButtonSelected.previousElementSibling;
+                    opButtonSelected.setAttribute("class", "btn sel-op-btn");
                 }
-                else currentDisplay.previousElementSibling.textContent = "-";
+                else if (opButtonSelected != null && opButtonSelected.textContent == "-") {
+                    opButtonSelected.setAttribute("class", "btn op-btn");
+                    opButtonSelected = opButtonSelected.nextElementSibling;
+                    opButtonSelected.setAttribute("class", "btn sel-op-btn");
+                }
+                // otherwise toggle negative sign
+                else {
+                    if (currentDisplay.previousElementSibling.textContent == "-") {
+                        currentDisplay.previousElementSibling.textContent = "";
+                    }
+                    else currentDisplay.previousElementSibling.textContent = "-";
+                };
             });
-
         };
     });
 
