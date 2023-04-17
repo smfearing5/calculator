@@ -54,7 +54,9 @@ function buttonSetup() {
                     overwrite = false;
                     currentDisplay.textContent = "";
                 };
-                currentDisplay.textContent += btn.textContent;
+                if (currentDisplay.textContent.length < 11) {
+                    currentDisplay.textContent += btn.textContent;
+                }
             });
         }
         else if (btn.textContent == ".") {
@@ -124,13 +126,21 @@ function equalsButton() {
     // execute operation
     let output = operate(num1, num2, opButtonSelected.textContent);
 
-    // update display
+    // adjust output
     if (output < 0) {  // move the negative sign
         output *= -1;
         topDisplay.previousElementSibling.textContent = "-";
     }
     else topDisplay.previousElementSibling.textContent = "";
 
+    if (output > 99999999999) output = "OVERFLOW";
+
+    output = output.toString();
+    if (output.length > 11) {
+        output = output.slice(0, 11);
+    };
+
+    // update display
     bottomDisplay.previousElementSibling.textContent = "";
     topDisplay.textContent = output;
     bottomDisplay.textContent = "";
