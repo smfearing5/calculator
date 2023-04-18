@@ -1,7 +1,7 @@
 let topDisplay = document.querySelector("#top-display");
 let bottomDisplay = document.querySelector("#bottom-display");
 let clearButton = document.querySelector("#clear-btn");
-let backspace = document.querySelector("#backspace");
+let backspaceButton = document.querySelector("#backspace");
 let numButtons = document.querySelectorAll(".num-btn");
 let opButtons = document.querySelectorAll(".op-btn");
 
@@ -11,83 +11,28 @@ let overwrite = false;
 
 // main
 buttonSetup();
+keyboardSetup();
 
 
 // functions
+// setup functions
 function buttonSetup() {
     // top buttons
-    clearButton.addEventListener("click", () => {
-        topDisplay.textContent = "0";
-        bottomDisplay.textContent = "";
-        topDisplay.previousElementSibling.textContent = "";
-        bottomDisplay.previousElementSibling.textContent = "";
-        currentDisplay = topDisplay;
-
-        if (opButtonSelected != null) {
-            opButtonSelected.setAttribute("class", "btn op-btn");
-            opButtonSelected = null;
-        }
-    });
-
-    backspace.addEventListener("click", () => {
-        if (opButtonSelected != null && bottomDisplay.textContent === "") {
-            opButtonSelected.setAttribute("class", "btn op-btn");
-            opButtonSelected = null;
-            currentDisplay = topDisplay;
-        }
-        else {
-            currentDisplay.textContent = currentDisplay.textContent.slice(
-                0, currentDisplay.textContent.length - 1
-            );
-        };
-
-        if (topDisplay.textContent === "") {
-            topDisplay.textContent = 0;
-        };
-    });
+    clearButton.addEventListener("click", () => clear());
+    backspaceButton.addEventListener("click", () => backspace());
 
     // num buttons
     numButtons.forEach(btn => {
         if (isNaN(btn.textContent) == false) {  // if it is a number...
-            btn.addEventListener("click", () => {
-                if (currentDisplay.textContent === "0" || overwrite) {
-                    overwrite = false;
-                    currentDisplay.textContent = "";
-                };
-                if (currentDisplay.textContent.length < 11) {
-                    currentDisplay.textContent += btn.textContent;
-                }
-            });
+            btn.addEventListener("click", () => enterNumber(btn.textContent));
         }
         else if (btn.textContent == ".") {
-            btn.addEventListener("click", () => {
-                if (!currentDisplay.textContent.includes(".")) {
-                    currentDisplay.textContent += ".";
-                };
-            });
+            btn.addEventListener("click", () => enterDecimal());
         }
         else if (btn.textContent == "+/-") {
-            btn.addEventListener("click", () => {
-                // if already adding or subtracting, just toggle which
-                if (opButtonSelected != null && opButtonSelected.textContent == "+") {
-                    opButtonSelected.setAttribute("class", "btn op-btn");
-                    opButtonSelected = opButtonSelected.previousElementSibling;
-                    opButtonSelected.setAttribute("class", "btn sel-op-btn");
-                }
-                else if (opButtonSelected != null && opButtonSelected.textContent == "-") {
-                    opButtonSelected.setAttribute("class", "btn op-btn");
-                    opButtonSelected = opButtonSelected.nextElementSibling;
-                    opButtonSelected.setAttribute("class", "btn sel-op-btn");
-                }
-                // otherwise toggle negative sign
-                else {
-                    if (currentDisplay.previousElementSibling.textContent == "-") {
-                        currentDisplay.previousElementSibling.textContent = "";
-                    }
-                    else currentDisplay.previousElementSibling.textContent = "-";
-                };
-            });
-        };
+            btn.addEventListener("click", () => toggleSign());
+        }
+        else console.log("ERROR: unexpected button in numButtons");
     });
 
     // op buttons
@@ -97,12 +42,130 @@ function buttonSetup() {
             btn.addEventListener("click", () => operatorButton(btn));
         }
         // equals button
-        else btn.addEventListener("click", () => {
-            if (opButtonSelected != null) equalsButton();
-        });
+        else btn.addEventListener("click", () => equalsButton());
     });
 }
 
+function keyboardSetup() {
+    window.addEventListener("keydown", function(e) {
+        // console.log(e);  // for checking keycodes
+        switch(e.key) {
+            // top buttons
+            case "Delete":
+                clear();
+                break;
+            case "Backspace":
+                backspace();
+                break;
+            // number buttons
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+            case "9":
+                enterNumber(e.key);
+                break;
+            case ".":
+                enterDecimal();
+                break;
+            case "\\":
+                toggleSign();
+                break;
+            // operator buttons
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                opButtons.forEach(btn => {
+                    if (btn.textContent == e.key) {
+                        operatorButton(btn);
+                    };
+                });
+                break;
+            case "Enter":
+                equalsButton();
+                break;
+            default:
+        };
+    });
+}
+
+// top button functions
+function clear() {
+    topDisplay.textContent = "0";
+    bottomDisplay.textContent = "";
+    topDisplay.previousElementSibling.textContent = "";
+    bottomDisplay.previousElementSibling.textContent = "";
+    currentDisplay = topDisplay;
+
+    if (opButtonSelected != null) {
+        opButtonSelected.setAttribute("class", "btn op-btn");
+        opButtonSelected = null;
+    }
+}
+
+function backspace() {
+    if (opButtonSelected != null && bottomDisplay.textContent === "") {
+        opButtonSelected.setAttribute("class", "btn op-btn");
+        opButtonSelected = null;
+        currentDisplay = topDisplay;
+    }
+    else {
+        currentDisplay.textContent = currentDisplay.textContent.slice(
+            0, currentDisplay.textContent.length - 1
+        );
+    };
+
+    if (topDisplay.textContent === "") {
+        topDisplay.textContent = 0;
+    };
+
+}
+
+// number button functions
+function enterNumber(num) {
+    if (currentDisplay.textContent === "0" || overwrite) {
+        overwrite = false;
+        currentDisplay.textContent = "";
+    };
+    if (currentDisplay.textContent.length < 11) {
+        currentDisplay.textContent += num;
+    }
+}
+
+function enterDecimal() {
+    if (!currentDisplay.textContent.includes(".")) {
+        currentDisplay.textContent += ".";
+    };
+}
+
+function toggleSign() {
+    // if already adding or subtracting, just toggle which
+    if (opButtonSelected != null && opButtonSelected.textContent == "+") {
+        opButtonSelected.setAttribute("class", "btn op-btn");
+        opButtonSelected = opButtonSelected.previousElementSibling;
+        opButtonSelected.setAttribute("class", "btn sel-op-btn");
+    }
+    else if (opButtonSelected != null && opButtonSelected.textContent == "-") {
+        opButtonSelected.setAttribute("class", "btn op-btn");
+        opButtonSelected = opButtonSelected.nextElementSibling;
+        opButtonSelected.setAttribute("class", "btn sel-op-btn");
+    }
+    // otherwise toggle negative sign
+    else {
+        if (currentDisplay.previousElementSibling.textContent == "-") {
+            currentDisplay.previousElementSibling.textContent = "";
+        }
+        else currentDisplay.previousElementSibling.textContent = "-";
+    };
+}
+
+// operator button functions
 function operatorButton(btn) {
     if (opButtonSelected == null) {
         opButtonSelected = btn;
@@ -112,6 +175,9 @@ function operatorButton(btn) {
 }
 
 function equalsButton() {
+    // check if equals is appropriate, else discontinue function
+    if (opButtonSelected == null || bottomDisplay.textContent === "") return;
+
     // get the right numbers
     let num1 = parseFloat(topDisplay.textContent);
     if (topDisplay.previousElementSibling.textContent == "-") {
@@ -152,6 +218,7 @@ function equalsButton() {
     opButtonSelected = null;
 }
 
+// basic calculator functions
 function add(num1, num2) {
     return num1 + num2;
 }
